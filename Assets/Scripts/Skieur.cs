@@ -24,7 +24,6 @@ public class Skieur : MonoBehaviour
     // Sons
     AudioSource audioSource;
     public AudioClip sPoint;
-    public AudioClip sBump;
     public AudioClip sOw;
 
     // Utiliser ces fonctions pour activer et d�sactiver les InputActions
@@ -86,7 +85,7 @@ public class Skieur : MonoBehaviour
             audioSource.Stop();
             audioSource.PlayOneShot(sOw);
         }
-        else {audioSource.PlayOneShot(sBump);}
+        else {audioSource.PlayOneShot(sOw);}
     }
 
     void OnTriggerEnter2D(Collider2D collision)
