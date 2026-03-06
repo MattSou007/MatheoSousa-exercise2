@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Animations;
@@ -18,13 +19,20 @@ public class Skieur : MonoBehaviour
     public bool isDead;
     public bool isWin;
 
-    // Score
+    // Elements
     public int points;
+    public float timer = 0f;
 
     // Sons
     AudioSource audioSource;
     public AudioClip sPoint;
     public AudioClip sOw;
+
+    // UI
+    public TMP_Text tPoints;
+    public TMP_Text tTime;
+    public GameObject panelWin;
+    public GameObject panelDead;
 
     // Utiliser ces fonctions pour activer et d�sactiver les InputActions
     private void OnEnable()
@@ -42,6 +50,8 @@ public class Skieur : MonoBehaviour
     {
         sprite = GameObject.FindGameObjectWithTag("PSprite");
         audioSource = GetComponent<AudioSource>();
+
+        tPoints.text = $"Points: {points}";
     }
     void Update()
     {
@@ -50,6 +60,8 @@ public class Skieur : MonoBehaviour
 
         if (isDead == false && isWin == false)
         {
+            timer += Time.deltaTime;
+            tTime.text = $"{timer:F1}s";
 
             horizontalTran = hMove.ReadValue<float>();
             verticalTran = vMove.ReadValue<float>();
@@ -84,6 +96,7 @@ public class Skieur : MonoBehaviour
             GetComponent<Collider2D>().enabled = false;
             audioSource.Stop();
             audioSource.PlayOneShot(sOw);
+            panelDead.SetActive(true);
         }
         else {audioSource.PlayOneShot(sOw);}
     }
@@ -92,7 +105,7 @@ public class Skieur : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Collectable"))
         {
-            points ++;
+            tPoints.text = $"Points: {points++}";
             collision.gameObject.GetComponent<SpriteRenderer>().enabled = false;
             collision.gameObject.GetComponent<Collider2D>().enabled = false;
             audioSource.PlayOneShot(sPoint);
@@ -100,7 +113,7 @@ public class Skieur : MonoBehaviour
 
         if(collision.gameObject.CompareTag("Points"))
         {
-            points ++;
+            tPoints.text = $"Points: {points++}";
             collision.gameObject.GetComponent<Collider2D>().enabled = false;
             audioSource.PlayOneShot(sPoint);
         }
@@ -108,6 +121,7 @@ public class Skieur : MonoBehaviour
         if(collision.gameObject.CompareTag("FinJeu"))
         {
             isWin = true;
+            panelWin.SetActive(true);
         }
     }
 }
